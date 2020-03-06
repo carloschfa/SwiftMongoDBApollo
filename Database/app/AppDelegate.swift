@@ -10,7 +10,24 @@
 // THE SOFTWARE.
 
 import UIKit
-import Firebase
+import Apollo
+
+#warning("Change the endpoint before running the project.")
+
+let graphQLEndpoint = "http://localhost:3000/graphql"
+let apollo: ApolloClient = {
+    let configuration = URLSessionConfiguration.default
+    let wsEndpointURL = URL(string: "ws://localhost:3000/graphql")!
+    let endpointURL = URL(string: graphQLEndpoint)!
+    let websocket = WebSocketTransport(request: URLRequest(url: wsEndpointURL), connectingPayload: nil)
+    let splitNetworkTransport = SplitNetworkTransport(
+        httpNetworkTransport: HTTPNetworkTransport(
+            url: endpointURL
+        ),
+        webSocketNetworkTransport: websocket
+    )
+  return ApolloClient(networkTransport: splitNetworkTransport)
+}()
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 @UIApplicationMain
@@ -21,15 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------
-		// Firebase initialization
-		//-----------------------------------------------------------------------------------------------------------------------------------------
-		FirebaseApp.configure()
-		Firestore.firestore().settings.isPersistenceEnabled = false
-		FirebaseConfiguration().setLoggerLevel(.error)
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 		// UI initialization
 		//-----------------------------------------------------------------------------------------------------------------------------------------
 		window = UIWindow(frame: UIScreen.main.bounds)

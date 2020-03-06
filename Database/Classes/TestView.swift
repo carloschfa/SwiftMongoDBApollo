@@ -10,14 +10,14 @@
 // THE SOFTWARE.
 
 import UIKit
-import Firebase
+import Apollo
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 class TestView: UIViewController {
 
 	@IBOutlet var tableView: UITableView!
 
-	private var listener: ListenerRegistration?
+	private var listener: Cancellable?
 
 	private var filter: [String] = ["Category1", "Category2", "Categroy3"]
 	private var categories: [String] = ["Category1", "Category2", "Categroy3"]
@@ -57,16 +57,28 @@ class TestView: UIViewController {
 	// MARK: - Backend methods (observer)
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func createObserver() {
-
-		let query = Firestore.firestore().collection("Objects").whereField("category", in: filter)
-		listener = query.addSnapshotListener { querySnapshot, error in
-			if let snapshot = querySnapshot {
-				for documentChange in snapshot.documentChanges {
-					self.addObject(documentChange.document.data())
-				}
-				self.tableView.reloadData()
-			}
-		}
+    listener = apollo.subscribe(subscription: ObjectChangedSubscription(), queue: .main) { result in
+      switch result {
+      case .success(let graphQLResult):
+        guard let objects = graphQLResult.data?.objects else { return }
+        self.objectIds.removeAll()
+        self.objects.removeAll()
+        
+        for object in objects {
+          if let object = object {
+            self.objects[object.objectId] = object.resultMap
+            self.objectIds.append(object.objectId)
+          }
+        }
+        DispatchQueue.main.async {
+          self.tableView.reloadData()
+        }
+      case .failure(let error):
+        NSLog(error.localizedDescription)
+      }
+    }
+    fetchObjects()
+		
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,68 +95,117 @@ class TestView: UIViewController {
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func removeObserver() {
 
-		listener?.remove()
+		listener?.cancel()
 		listener = nil
 	}
 
 	// MARK: - Backend methods (fetch)
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func fetchObjects() {
-
-		let query = Firestore.firestore().collection("Objects").whereField("category", in: filter)
-		query.getDocuments() { querySnapshot, error in
-			if let snapshot = querySnapshot {
-				for documentChange in snapshot.documentChanges {
-					print(documentChange.document.data())
-				}
-			}
-		}
+    apollo.fetch(query: ListObjectsQuery(categories: filter)) { result in
+      switch result {
+      case .success(let graphQLResult):
+        
+        guard let objects = graphQLResult.data?.objectsByCategories else { return }
+        self.objectIds.removeAll()
+        self.objects.removeAll()
+        
+        for object in objects {
+          if let object = object {
+            self.objects[object.objectId] = object.resultMap
+            self.objectIds.append(object.objectId)
+          }
+        }
+        DispatchQueue.main.async {
+          self.tableView.reloadData()
+        }
+    
+      case .failure(let error):
+        NSLog(error.localizedDescription)
+      }
+    }
 	}
 
 	// MARK: - Backend methods (create, update)
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func createObject(_ category: String) {
-
-		let objectId = UUID().uuidString
-
-		var object: [String: Any] = [:]
-
-		object["objectId"] = objectId
-		object["category"] = category
-
-		object["text"] = randomText()
-		object["number"] = randomInt()
-		object["boolean"] = randomBool()
-
-		object["createdAt"] = FieldValue.serverTimestamp()
-		object["updatedAt"] = FieldValue.serverTimestamp()
-
-		Firestore.firestore().collection("Objects").document(objectId).setData(object) { error in
-			if let error = error {
-				print(error.localizedDescription)
-			}
-		}
+    let insertObject = InsertObjectMutation(objectId: UUID().uuidString, filter: filter, category: category, text: randomText(), number: randomInt(), boolean: randomBool(), createdAt: Date().string())
+    
+    apollo.perform(mutation: insertObject) { result in
+      switch result {
+      case .success(let graphQLResult):
+        guard let message = graphQLResult.data?.insertObject.message else { return }
+        NSLog(message)
+      case .failure(let error):
+        NSLog(error.localizedDescription)
+      }
+    }
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func updateObject(_ object: [String: Any]) {
-
-		guard let objectId = object["objectId"] as? String else { return }
-
-		var object = object
-
-		object["text"] = randomText()
-		object["number"] = randomInt()
-		object["boolean"] = randomBool()
-
-		object["updatedAt"] = FieldValue.serverTimestamp()
-
-		Firestore.firestore().collection("Objects").document(objectId).updateData(object) { error in
-			if let error = error {
-				print(error.localizedDescription)
-			}
-		}
+    guard
+      let objectId = object["objectId"] as? String,
+      let index = objectIds.firstIndex(of: objectId)
+      else { return }
+    
+    var object = object
+    
+    object["text"] = randomText()
+    object["number"] = randomInt()
+    object["boolean"] = randomBool()
+    object["updatedAt"] = Date().string()
+    
+    let updateObject = UpdateObjectMutation(objectId: objectId,
+                                            filter: filter,
+                                            text: randomText(),
+                                            number: randomInt(),
+                                            boolean: randomBool(),
+                                            updatedAt: Date().string())
+    
+    apollo.perform(mutation: updateObject) { [weak self] result in
+      switch result {
+      case .success(let graphQLResult):
+        guard
+          let updateObject = graphQLResult.data?.updateObject,
+          updateObject.success else { return }
+        self?.objects[objectId] = object
+        DispatchQueue.main.async {
+          self?.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        }
+        NSLog(updateObject.message)
+      case .failure(let error):
+        NSLog(error.localizedDescription)
+      }
+    }
 	}
+  
+  func deleteObject(_ object: [String: Any]) {
+    guard
+      let objectId = object["objectId"] as? String,
+      let index = objects.index(forKey: objectId),
+      let indexPath = objectIds.firstIndex(of: objectId)
+      else { return }
+    
+    let deleteObject = DeleteObjectMutation(objectId: objectId, filter: filter)
+    apollo.perform(mutation: deleteObject) { [weak self] result in
+      switch result {
+      case .success(let graphQLResult):
+        guard
+          let deleteObject = graphQLResult.data?.deleteObject,
+          deleteObject.success else { return }
+        self?.objects.remove(at: index)
+        self?.objectIds.removeAll(where: { $0 == objectId })
+        DispatchQueue.main.async {
+          self?.tableView.deleteRows(at: [IndexPath(row: indexPath, section: 0)], with: .none)
+        }
+        NSLog(deleteObject.message)
+      case .failure(let error):
+        NSLog(error.localizedDescription)
+      }
+    }
+    
+  }
 
 	// MARK: - User actions
 	//---------------------------------------------------------------------------------------------------------------------------------------------
@@ -273,4 +334,23 @@ extension TestView: UITableViewDelegate {
 			}
 		}
 	}
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      let objectId = objectIds[indexPath.row]
+      
+      if let object = objects[objectId] as? [String: Any] {
+        self.deleteObject(object)
+      }
+    }
+  }
+  
+}
+
+extension Date {
+  func string(format: String? = nil) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = format ?? "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+    return formatter.string(from: self)
+  }
 }

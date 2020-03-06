@@ -3,5 +3,6 @@ platform :ios, '12.4'
 use_frameworks!
 
 target 'app' do
-	pod 'Firebase/Firestore'
+  pod 'Apollo'
+  pod "Apollo/WebSocket"
 end

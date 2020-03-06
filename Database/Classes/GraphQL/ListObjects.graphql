@@ -1,0 +1,12 @@
+query ListObjects($categories: [String]!) {
+  objectsByCategories(category: $categories)  {
+    objectId
+    category
+    text
+    number
+    boolean
+    createdAt
+    updatedAt
+  }
+}
+

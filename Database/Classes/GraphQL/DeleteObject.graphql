@@ -1,0 +1,7 @@
+mutation DeleteObject($objectId: String!, $filter: [String]!) {
+  
+  deleteObject(objectId: $objectId, filter: $filter) {
+    success
+    message
+  }
+}

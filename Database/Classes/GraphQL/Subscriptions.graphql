@@ -1,0 +1,12 @@
+subscription ObjectChanged {
+  objects {
+    objectId
+    category
+    text
+    number
+    boolean
+    createdAt
+    updatedAt
+  }
+}
+
