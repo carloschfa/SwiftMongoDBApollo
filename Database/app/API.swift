@@ -8,8 +8,8 @@ public final class DeleteObjectMutation: GraphQLMutation {
   /// The raw GraphQL definition of this operation.
   public let operationDefinition: String =
     """
-    mutation DeleteObject($objectId: String!, $filter: [String]!) {
-      deleteObject(objectId: $objectId, filter: $filter) {
+    mutation DeleteObject($objectId: String!) {
+      deleteObject(objectId: $objectId) {
         __typename
         success
         message
@@ -20,22 +20,20 @@ public final class DeleteObjectMutation: GraphQLMutation {
   public let operationName: String = "DeleteObject"
 
   public var objectId: String
-  public var filter: [String?]
 
-  public init(objectId: String, filter: [String?]) {
+  public init(objectId: String) {
     self.objectId = objectId
-    self.filter = filter
   }
 
   public var variables: GraphQLMap? {
-    return ["objectId": objectId, "filter": filter]
+    return ["objectId": objectId]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes: [String] = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("deleteObject", arguments: ["objectId": GraphQLVariable("objectId"), "filter": GraphQLVariable("filter")], type: .nonNull(.object(DeleteObject.selections))),
+      GraphQLField("deleteObject", arguments: ["objectId": GraphQLVariable("objectId")], type: .nonNull(.object(DeleteObject.selections))),
     ]
 
     public private(set) var resultMap: ResultMap
@@ -110,8 +108,8 @@ public final class InsertObjectMutation: GraphQLMutation {
   /// The raw GraphQL definition of this operation.
   public let operationDefinition: String =
     """
-    mutation InsertObject($objectId: String!, $filter: [String]!, $category: String!, $text: String!, $number: Int!, $boolean: Boolean!, $createdAt: String!) {
-      insertObject(objectId: $objectId, filter: $filter, category: $category, text: $text, number: $number, boolean: $boolean, createdAt: $createdAt) {
+    mutation InsertObject($objectId: String!, $category: String!, $text: String!, $number: Int!, $boolean: Boolean!, $createdAt: String!) {
+      insertObject(objectId: $objectId, category: $category, text: $text, number: $number, boolean: $boolean, createdAt: $createdAt) {
         __typename
         success
         message
@@ -122,16 +120,14 @@ public final class InsertObjectMutation: GraphQLMutation {
   public let operationName: String = "InsertObject"
 
   public var objectId: String
-  public var filter: [String?]
   public var category: String
   public var text: String
   public var number: Int
   public var boolean: Bool
   public var createdAt: String
 
-  public init(objectId: String, filter: [String?], category: String, text: String, number: Int, boolean: Bool, createdAt: String) {
+  public init(objectId: String, category: String, text: String, number: Int, boolean: Bool, createdAt: String) {
     self.objectId = objectId
-    self.filter = filter
     self.category = category
     self.text = text
     self.number = number
@@ -140,14 +136,14 @@ public final class InsertObjectMutation: GraphQLMutation {
   }
 
   public var variables: GraphQLMap? {
-    return ["objectId": objectId, "filter": filter, "category": category, "text": text, "number": number, "boolean": boolean, "createdAt": createdAt]
+    return ["objectId": objectId, "category": category, "text": text, "number": number, "boolean": boolean, "createdAt": createdAt]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes: [String] = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("insertObject", arguments: ["objectId": GraphQLVariable("objectId"), "filter": GraphQLVariable("filter"), "category": GraphQLVariable("category"), "text": GraphQLVariable("text"), "number": GraphQLVariable("number"), "boolean": GraphQLVariable("boolean"), "createdAt": GraphQLVariable("createdAt")], type: .nonNull(.object(InsertObject.selections))),
+      GraphQLField("insertObject", arguments: ["objectId": GraphQLVariable("objectId"), "category": GraphQLVariable("category"), "text": GraphQLVariable("text"), "number": GraphQLVariable("number"), "boolean": GraphQLVariable("boolean"), "createdAt": GraphQLVariable("createdAt")], type: .nonNull(.object(InsertObject.selections))),
     ]
 
     public private(set) var resultMap: ResultMap
@@ -525,8 +521,8 @@ public final class UpdateObjectMutation: GraphQLMutation {
   /// The raw GraphQL definition of this operation.
   public let operationDefinition: String =
     """
-    mutation UpdateObject($objectId: String!, $filter: [String]!, $text: String!, $number: Int!, $boolean: Boolean!, $updatedAt: String!) {
-      updateObject(objectId: $objectId, filter: $filter, text: $text, number: $number, boolean: $boolean, updatedAt: $updatedAt) {
+    mutation UpdateObject($objectId: String!, $text: String!, $number: Int!, $boolean: Boolean!, $updatedAt: String!) {
+      updateObject(objectId: $objectId, text: $text, number: $number, boolean: $boolean, updatedAt: $updatedAt) {
         __typename
         success
         message
@@ -537,15 +533,13 @@ public final class UpdateObjectMutation: GraphQLMutation {
   public let operationName: String = "UpdateObject"
 
   public var objectId: String
-  public var filter: [String?]
   public var text: String
   public var number: Int
   public var boolean: Bool
   public var updatedAt: String
 
-  public init(objectId: String, filter: [String?], text: String, number: Int, boolean: Bool, updatedAt: String) {
+  public init(objectId: String, text: String, number: Int, boolean: Bool, updatedAt: String) {
     self.objectId = objectId
-    self.filter = filter
     self.text = text
     self.number = number
     self.boolean = boolean
@@ -553,14 +547,14 @@ public final class UpdateObjectMutation: GraphQLMutation {
   }
 
   public var variables: GraphQLMap? {
-    return ["objectId": objectId, "filter": filter, "text": text, "number": number, "boolean": boolean, "updatedAt": updatedAt]
+    return ["objectId": objectId, "text": text, "number": number, "boolean": boolean, "updatedAt": updatedAt]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes: [String] = ["Mutation"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("updateObject", arguments: ["objectId": GraphQLVariable("objectId"), "filter": GraphQLVariable("filter"), "text": GraphQLVariable("text"), "number": GraphQLVariable("number"), "boolean": GraphQLVariable("boolean"), "updatedAt": GraphQLVariable("updatedAt")], type: .nonNull(.object(UpdateObject.selections))),
+      GraphQLField("updateObject", arguments: ["objectId": GraphQLVariable("objectId"), "text": GraphQLVariable("text"), "number": GraphQLVariable("number"), "boolean": GraphQLVariable("boolean"), "updatedAt": GraphQLVariable("updatedAt")], type: .nonNull(.object(UpdateObject.selections))),
     ]
 
     public private(set) var resultMap: ResultMap

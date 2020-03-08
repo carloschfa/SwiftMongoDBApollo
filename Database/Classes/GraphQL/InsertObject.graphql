@@ -1,5 +1,4 @@
 mutation InsertObject($objectId: String!,
-                      $filter: [String]!,
                       $category: String!,
                       $text: String!,
                       $number: Int!,
@@ -7,7 +6,6 @@ mutation InsertObject($objectId: String!,
                       $createdAt: String!) {
   
   insertObject(objectId: $objectId,
-              filter: $filter,
               category: $category,
               text: $text,
               number: $number,

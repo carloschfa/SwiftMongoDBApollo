@@ -64,7 +64,9 @@ class TestView: UIViewController {
         self.objectIds.removeAll()
         self.objects.removeAll()
         
-        for object in objects {
+        let filterObjects = objects.filter { self.filter.contains(($0?.category)!) }
+        
+        for object in filterObjects {
           if let object = object {
             self.objects[object.objectId] = object.resultMap
             self.objectIds.append(object.objectId)
@@ -129,7 +131,7 @@ class TestView: UIViewController {
 	// MARK: - Backend methods (create, update)
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func createObject(_ category: String) {
-    let insertObject = InsertObjectMutation(objectId: UUID().uuidString, filter: filter, category: category, text: randomText(), number: randomInt(), boolean: randomBool(), createdAt: Date().string())
+    let insertObject = InsertObjectMutation(objectId: UUID().uuidString, category: category, text: randomText(), number: randomInt(), boolean: randomBool(), createdAt: Date().string())
     
     apollo.perform(mutation: insertObject) { result in
       switch result {
@@ -157,7 +159,6 @@ class TestView: UIViewController {
     object["updatedAt"] = Date().string()
     
     let updateObject = UpdateObjectMutation(objectId: objectId,
-                                            filter: filter,
                                             text: randomText(),
                                             number: randomInt(),
                                             boolean: randomBool(),
@@ -187,7 +188,7 @@ class TestView: UIViewController {
       let indexPath = objectIds.firstIndex(of: objectId)
       else { return }
     
-    let deleteObject = DeleteObjectMutation(objectId: objectId, filter: filter)
+    let deleteObject = DeleteObjectMutation(objectId: objectId)
     apollo.perform(mutation: deleteObject) { [weak self] result in
       switch result {
       case .success(let graphQLResult):

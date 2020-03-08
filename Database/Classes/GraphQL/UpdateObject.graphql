@@ -1,12 +1,10 @@
 mutation UpdateObject($objectId: String!,
-                      $filter: [String]!,
                       $text: String!,
                       $number: Int!,
                       $boolean: Boolean!,
                       $updatedAt: String!) {
   
   updateObject(objectId: $objectId,
-               filter: $filter,
                text: $text,
                number: $number,
                boolean: $boolean,

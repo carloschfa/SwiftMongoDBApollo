@@ -1,6 +1,6 @@
-mutation DeleteObject($objectId: String!, $filter: [String]!) {
+mutation DeleteObject($objectId: String!) {
   
-  deleteObject(objectId: $objectId, filter: $filter) {
+  deleteObject(objectId: $objectId) {
     success
     message
   }
