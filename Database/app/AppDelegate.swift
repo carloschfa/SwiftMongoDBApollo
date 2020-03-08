@@ -14,10 +14,10 @@ import Apollo
 
 #warning("Change the endpoint before running the project.")
 
-let graphQLEndpoint = "http://localhost:3000/graphql"
+let graphQLEndpoint = "http://18.230.76.227:3000/graphql"
 let apollo: ApolloClient = {
     let configuration = URLSessionConfiguration.default
-    let wsEndpointURL = URL(string: "ws://localhost:3000/graphql")!
+    let wsEndpointURL = URL(string: "ws://18.230.76.227:3000/graphql")!
     let endpointURL = URL(string: graphQLEndpoint)!
     let websocket = WebSocketTransport(request: URLRequest(url: wsEndpointURL), connectingPayload: nil)
     let splitNetworkTransport = SplitNetworkTransport(
