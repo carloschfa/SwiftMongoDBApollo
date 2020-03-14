@@ -147,8 +147,7 @@ class TestView: UIViewController {
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func updateObject(_ object: [String: Any]) {
     guard
-      let objectId = object["objectId"] as? String,
-      let index = objectIds.firstIndex(of: objectId)
+      let objectId = object["objectId"] as? String
       else { return }
     
     var object = object
@@ -171,9 +170,6 @@ class TestView: UIViewController {
           let updateObject = graphQLResult.data?.updateObject,
           updateObject.success else { return }
         self?.objects[objectId] = object
-        DispatchQueue.main.async {
-          self?.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
-        }
         NSLog(updateObject.message)
       case .failure(let error):
         NSLog(error.localizedDescription)
@@ -184,8 +180,7 @@ class TestView: UIViewController {
   func deleteObject(_ object: [String: Any]) {
     guard
       let objectId = object["objectId"] as? String,
-      let index = objects.index(forKey: objectId),
-      let indexPath = objectIds.firstIndex(of: objectId)
+      let index = objects.index(forKey: objectId)
       else { return }
     
     let deleteObject = DeleteObjectMutation(objectId: objectId)
@@ -197,9 +192,6 @@ class TestView: UIViewController {
           deleteObject.success else { return }
         self?.objects.remove(at: index)
         self?.objectIds.removeAll(where: { $0 == objectId })
-        DispatchQueue.main.async {
-          self?.tableView.deleteRows(at: [IndexPath(row: indexPath, section: 0)], with: .none)
-        }
         NSLog(deleteObject.message)
       case .failure(let error):
         NSLog(error.localizedDescription)
