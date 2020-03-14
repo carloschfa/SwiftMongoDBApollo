@@ -10,9 +10,7 @@
 // THE SOFTWARE.
 
 import UIKit
-// import AWSAppSync
 import Apollo
-
 
 #warning("Change the endpoint before running the project.")
 
@@ -40,25 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-    
-    /*var appSyncClient: AWSAppSyncClient?
-    
-    do {
-        // initialize the AppSync client configuration configuration
-        let cacheConfiguration = try AWSAppSyncCacheConfiguration()
-        let appSyncConfig = try AWSAppSyncClientConfiguration(appSyncServiceConfig: AWSAppSyncServiceConfig(),
-                                                              cacheConfiguration: cacheConfiguration)
-        // initialize app sync client
-        appSyncClient = try AWSAppSyncClient(appSyncConfig: appSyncConfig)
-
-        // set id as the cache key for objects
-        appSyncClient?.apolloClient?.cacheKeyForObject = { $0["id"] }
-
-        print("AppSyncClient initialized with cacheConfiguration: \(cacheConfiguration)")
-    } catch {
-        print("Error initializing AppSync client. \(error)")
-    }*/
-    
     //-----------------------------------------------------------------------------------------------------------------------------------------
 		// UI initialization
 		//-----------------------------------------------------------------------------------------------------------------------------------------

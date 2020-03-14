@@ -23,7 +23,6 @@
 		46A8146024128BDF0060B3C0 /* InsertObject.graphql in Resources */ = {isa = PBXBuildFile; fileRef = 46A8145A24128BDF0060B3C0 /* InsertObject.graphql */; };
 		46A8146124128BDF0060B3C0 /* schema.json in Resources */ = {isa = PBXBuildFile; fileRef = 46A8145B24128BDF0060B3C0 /* schema.json */; };
 		46A8146424128E920060B3C0 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8146324128E920060B3C0 /* API.swift */; };
-		46F02DA52417F36B00E53097 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 46F02DA42417F36B00E53097 /* awsconfiguration.json */; };
 		6C0888E250EDDE30BCA104EB /* Pods_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A8835041C05399266378E9 /* Pods_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		46A8145A24128BDF0060B3C0 /* InsertObject.graphql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = InsertObject.graphql; sourceTree = "<group>"; };
 		46A8145B24128BDF0060B3C0 /* schema.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = schema.json; sourceTree = "<group>"; };
 		46A8146324128E920060B3C0 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = app/API.swift; sourceTree = SOURCE_ROOT; };
-		46F02DA42417F36B00E53097 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
 		7393A6F3A4D6270AF7ACDCFA /* Pods-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.release.xcconfig"; path = "Pods/Target Support Files/Pods-app/Pods-app.release.xcconfig"; sourceTree = "<group>"; };
 		DED94DC0AC66CCD8277DB3AF /* app-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "app-Prefix.pch"; sourceTree = "<group>"; };
 		FC28F63C1114893726170446 /* Pods-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.debug.xcconfig"; path = "Pods/Target Support Files/Pods-app/Pods-app.debug.xcconfig"; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 				29EF508923F2B2E300CB7381 /* FilterView.xib */,
 				29F0B02923BFF19F0016709B /* TestView.swift */,
 				29F0B02A23BFF19F0016709B /* TestView.xib */,
-				46F02DA42417F36B00E53097 /* awsconfiguration.json */,
 				46A8146324128E920060B3C0 /* API.swift */,
 			);
 			path = Classes;
@@ -227,7 +224,6 @@
 				46A8146024128BDF0060B3C0 /* InsertObject.graphql in Resources */,
 				46A8146124128BDF0060B3C0 /* schema.json in Resources */,
 				29D29F011D9A59E4006CA074 /* Assets.xcassets in Resources */,
-				46F02DA52417F36B00E53097 /* awsconfiguration.json in Resources */,
 				46A8145D24128BDF0060B3C0 /* DeleteObject.graphql in Resources */,
 				46A8145E24128BDF0060B3C0 /* ListObjects.graphql in Resources */,
 				2950182F1D9A5CE000AFD8B3 /* GoogleService-Info.plist in Resources */,
@@ -262,20 +258,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-app/Pods-app-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AWSAppSync/AWSAppSync.framework",
-				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
 				"${BUILT_PRODUCTS_DIR}/Apollo/Apollo.framework",
-				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAppSync.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Apollo.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -5,5 +5,4 @@ use_frameworks!
 target 'app' do
   pod 'Apollo'
   pod "Apollo/WebSocket"
-  pod 'AWSAppSync'
 end
